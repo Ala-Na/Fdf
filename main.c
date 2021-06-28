@@ -6,7 +6,7 @@
 /*   By: elanna <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/23 20:14:02 by elanna            #+#    #+#             */
-/*   Updated: 2021/06/24 16:55:22 by elanna           ###   ########.fr       */
+/*   Updated: 2021/06/25 22:31:54 by anadege          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ int	key_hook(int keycode, t_mlx *param)
 	if (keycode == 65307)
 	{
 		mlx_destroy_window(param->mlx, param->window);
+		exit(0);
 		return (1);
 	}
 	return (0);
