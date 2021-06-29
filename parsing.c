@@ -6,7 +6,7 @@
 /*   By: anadege <anadege@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/28 17:06:19 by anadege           #+#    #+#             */
-/*   Updated: 2021/06/28 23:35:48 by anadege          ###   ########.fr       */
+/*   Updated: 2021/06/29 21:15:42 by anadege          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,59 +37,70 @@ int	*convert_lines_to_int(char *line, int lines_size, int nbr_total_lines)
 		int_nbr++;
 		if (int_nbr < (lines_size * nbr_total_lines))
 		{
+			if (*line == '-')
+				line++;
 			while (ft_isdigit(*line))
 				line++;
-			line++;
+			while (*line == ' ' || *line == '\n')
+				line++;
 		}
 	}
 	return (int_line);
 }
 
-int	verify_line_format_and_size(char **line)
+int	verify_line_format_and_size(char *line, int *line_index)
 {
 	int	line_size;
 
 	line_size = 0;
-	while (**line != '\n' && **line != '\0')
+	while (line[*line_index] != '\n' && line[*line_index] != '\0')
 	{
-		if (!ft_isdigit(**line))
+		if (!ft_isdigit(line[*line_index]) && line[*line_index] != '-')
 			return (-1);
-		while (ft_isdigit(**line))
-			(*line)++;
-		while (**line == ' ')
-			(*line)++;
-		if (!ft_isdigit(**line) && **line != '\n' && **line != '\0')
+		if (line[*line_index] == '-')
+			(*line_index)++;
+		while (ft_isdigit(line[*line_index]))
+			(*line_index)++;
+		while (line[*line_index] == ' ')
+			(*line_index)++;
+		if (!ft_isdigit(line[*line_index]) && line[*line_index] != '-'
+			&& line[*line_index] != '\n' && line[*line_index] != '\0')
 			return (-1);
 		line_size++;
 	}
-	(*line)++;
+	if (line[*line_index] != '\0')
+		(*line_index)++;
 	return (line_size);
 }
 
-t_map	transform_map_content(char *content)
+void	transform_map_content(char *content, t_map	*map)
+{
+	(*map).lines_content = convert_lines_to_int(content, (*map).lines_size,
+			(*map).nbr_total_lines);
+	if ((*map).lines_content == NULL)
+		(*map).lines_size = -1;
+	return ;
+}
+
+t_map	prepare_map_content(char *content)
 {
 	t_map	map;
 	int		curr_line_size;
-	int		index;
+	int		line_index;
 
+	line_index = 0;
 	map.nbr_total_lines = 0;
-	map.lines_size = verify_line_format_and_size(&content);
-	printf("content : %s\n", content);
-	printf("%i\n", map.lines_size);
-	curr_line_size = verify_line_format_and_size(&content);
+	map.lines_size = verify_line_format_and_size(content, &line_index);
+	curr_line_size = map.lines_size;
 	map.nbr_total_lines += 1;
-	while (curr_line_size != -1 && *content != '\0')
+	while (curr_line_size != -1 && content[line_index] != '\0')
 	{
-		printf("content : %s\n", content);
 		if (curr_line_size != map.lines_size)
 			map.lines_size = -1;
 		map.nbr_total_lines += 1;
-		curr_line_size = verify_line_format_and_size(&content);
+		curr_line_size = verify_line_format_and_size(content, &line_index);
 	}
-	if (curr_line_size == -1 && *content != '\0')
-		map.lines_size = -1;
-	map.lines_content = convert_lines_to_int(content, map.lines_size, map.nbr_total_lines);
-	if (!map.lines_content)
+	if (curr_line_size == -1 && content[line_index] != '\0')
 		map.lines_size = -1;
 	return (map);
 }
@@ -139,7 +150,7 @@ int	open_map(char *filepath_map)
 
 	fd_map = open(filepath_map, O_RDONLY);
 	if (fd_map == -1)
-		ft_putstr_fd("Bad filepath/filename\n", 1);
+		ft_putstr_fd("Bad filepath or filename\n", 1);
 	return (fd_map);
 }
 
@@ -149,23 +160,31 @@ int	get_map_content(char *filepath_map)
 	char	*content;
 	t_map	map;
 
-
 	content = NULL;
 	fd_map = open_map(filepath_map);
 	if (fd_map == -1 || read_map_content(fd_map, &content) == -1)
 		return (-1);
-	map = transform_map_content(content);
+	map = prepare_map_content(content);
+	if (map.lines_size != -1)
+		transform_map_content(content, &map);
 	free(content);
 	if (map.lines_size == -1)
 		return (-1);
-	/* Test to delete */
-	int i = 0;
-	while (i < (map.lines_size * map.nbr_total_lines))
-		printf("%i ", map.lines_content[i++]);
+	//go to function to interpret
+	int i = 1;
+	while (i <= (map.lines_size * map.nbr_total_lines))
+	{
+		printf("%4i", map.lines_content[i - 1]);
+		if (i % map.lines_size == 0)
+			printf("\n");
+		i++;
+	}
 	printf("\n");
 	free(map.lines_content);
 	return (0);
 }
+
+/* NE PAS OUBLIER DE FREE map.lines_content */
 
 int	main(int argc, char **argv)
 {
@@ -174,10 +193,10 @@ int	main(int argc, char **argv)
 		ft_putstr_fd("Error in arguments\n", 1);
 		return (1);
 	}
-	if(get_map_content(argv[1]) != 0)
+	if (get_map_content(argv[1]) != 0)
 	{
-		ft_putstr_fd("Error parsing map\n", 1);
-		return(1);
+		ft_putstr_fd("Error while parsing map\n", 1);
+		return (1);
 	}
-	return(0);
+	return (0);
 }
