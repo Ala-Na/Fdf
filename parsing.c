@@ -6,21 +6,11 @@
 /*   By: anadege <anadege@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/28 17:06:19 by anadege           #+#    #+#             */
-/*   Updated: 2021/06/29 21:15:42 by anadege          ###   ########.fr       */
+/*   Updated: 2021/06/30 14:37:04 by anadege          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include "./libft/libft.h"
-
-typedef struct s_map
-{
-	int	lines_size;
-	int	nbr_total_lines;
-	int	*lines_content;
-}	t_map;
+#include "fdf.h"
 
 int	*convert_lines_to_int(char *line, int lines_size, int nbr_total_lines)
 {
@@ -154,7 +144,7 @@ int	open_map(char *filepath_map)
 	return (fd_map);
 }
 
-int	get_map_content(char *filepath_map)
+t_map	get_map_content(char *filepath_map)
 {
 	int		fd_map;
 	char	*content;
@@ -163,14 +153,33 @@ int	get_map_content(char *filepath_map)
 	content = NULL;
 	fd_map = open_map(filepath_map);
 	if (fd_map == -1 || read_map_content(fd_map, &content) == -1)
-		return (-1);
+	{
+		map.lines_size = -1;
+		return (map);
+	}
 	map = prepare_map_content(content);
 	if (map.lines_size != -1)
 		transform_map_content(content, &map);
 	free(content);
+	return (map);
+}
+
+/*
+int	main(int argc, char **argv)
+{
+	t_map map;
+
+	if (argc != 2)
+	{
+		ft_putstr_fd("Error in arguments\n", 1);
+		return (1);
+	}
+	map = get_map_content(argv[1]);
 	if (map.lines_size == -1)
-		return (-1);
-	//go to function to interpret
+	{
+		ft_putstr_fd("Error while parsing map\n", 1);
+		return (1);
+	}
 	int i = 1;
 	while (i <= (map.lines_size * map.nbr_total_lines))
 	{
@@ -180,23 +189,7 @@ int	get_map_content(char *filepath_map)
 		i++;
 	}
 	printf("\n");
-	free(map.lines_content);
+	free (map.lines_content);
 	return (0);
 }
-
-/* NE PAS OUBLIER DE FREE map.lines_content */
-
-int	main(int argc, char **argv)
-{
-	if (argc != 2)
-	{
-		ft_putstr_fd("Error in arguments\n", 1);
-		return (1);
-	}
-	if (get_map_content(argv[1]) != 0)
-	{
-		ft_putstr_fd("Error while parsing map\n", 1);
-		return (1);
-	}
-	return (0);
-}
+*/
