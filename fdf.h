@@ -6,7 +6,7 @@
 /*   By: anadege <anadege@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 14:29:19 by anadege           #+#    #+#             */
-/*   Updated: 2021/07/02 17:40:05 by anadege          ###   ########.fr       */
+/*   Updated: 2021/07/02 17:49:58 by anadege          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 
 # define WIN_LENGTH 1000
 # define WIN_HEIGHT 800
+# define ALPHA 30
 
 /*
 ** Structure for stocking map content

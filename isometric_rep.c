@@ -6,7 +6,7 @@
 /*   By: anadege <anadege@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/25 22:36:32 by anadege           #+#    #+#             */
-/*   Updated: 2021/07/02 17:40:07 by anadege          ###   ########.fr       */
+/*   Updated: 2021/07/02 17:52:10 by anadege          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,12 @@ void	twoD_iso_coordinates(int x, int y, int z)
 
 void	recup_threeD_coordinates(t_param *param)
 {
-	int	x = 0;
-	int	y = 0;
+	int	x;
+	int	y;
 	int	z = 0;
 
+	// Vertical
+	x = 0;
 	while (x < param->map_infos->lines_size)
 	{
 		y = 0;
@@ -53,35 +55,21 @@ void	recup_threeD_coordinates(t_param *param)
 		}
 		x += 1;
 	}
+
+	//Horizontal
+	y = 0;
+	while (y < param->map_infos->nbr_total_lines)
+	{
+		x = 0;
+		while (x < param->map_infos->lines_size)
+		{
+			z = param->map_infos->lines_content[x + y * param->map_infos->lines_size];
+			// get iso coordinate and draw segment ?
+			x += 1;
+		}
+		y += 1;
+	}
 }
-
-/*void	point_to_isometric(t_map *map, s_win_param window)
-{
-	int	x_pnt;
-	int	y_pnt;
-	int	z_pnt;
-	int	position;
-
-	x_pnt = 0;
-	y_pnt = 0;
-	position = 0;
-	z_pnt = map.lines_content[position];
-
-	
-
-	// Faire fonction récursives ?
-	//Next point x axis
-	if (x_pnt < map.lines_size)
-		x_pnt += 1;
-		position += 1;
-		z_pnt = map->lines_content[position];
-
-	//Next point y axis
-	if (y_pnt < nbr_total_lines)
-		y_pnt += 1;
-		position += map.lines_size;
-		z_pnt = map->lines_content[position];
-}*/
 
 int main(int argc, char **argv)
 {
