@@ -6,7 +6,7 @@
 /*   By: anadege <anadege@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/28 17:06:19 by anadege           #+#    #+#             */
-/*   Updated: 2021/06/30 14:37:04 by anadege          ###   ########.fr       */
+/*   Updated: 2021/07/02 14:29:05 by anadege          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,35 +63,38 @@ int	verify_line_format_and_size(char *line, int *line_index)
 	return (line_size);
 }
 
-void	transform_map_content(char *content, t_map	*map)
+void	transform_map_content(char *content, t_map	**map)
 {
-	(*map).lines_content = convert_lines_to_int(content, (*map).lines_size,
-			(*map).nbr_total_lines);
-	if ((*map).lines_content == NULL)
-		(*map).lines_size = -1;
+	(*map)->lines_content = convert_lines_to_int(content, (*map)->lines_size,
+			(*map)->nbr_total_lines);
+	if ((*map)->lines_content == NULL)
+		(*map)->lines_size = -1;
 	return ;
 }
 
-t_map	prepare_map_content(char *content)
+t_map	*prepare_map_content(char *content)
 {
-	t_map	map;
+	t_map	*map;
 	int		curr_line_size;
 	int		line_index;
 
+	map = malloc(sizeof(*map));
+	if (!map)
+		return (NULL);
 	line_index = 0;
-	map.nbr_total_lines = 0;
-	map.lines_size = verify_line_format_and_size(content, &line_index);
-	curr_line_size = map.lines_size;
-	map.nbr_total_lines += 1;
+	map->nbr_total_lines = 0;
+	map->lines_size = verify_line_format_and_size(content, &line_index);
+	curr_line_size = map->lines_size;
+	map->nbr_total_lines += 1;
 	while (curr_line_size != -1 && content[line_index] != '\0')
 	{
-		if (curr_line_size != map.lines_size)
-			map.lines_size = -1;
-		map.nbr_total_lines += 1;
+		if (curr_line_size != map->lines_size)
+			map->lines_size = -1;
+		map->nbr_total_lines += 1;
 		curr_line_size = verify_line_format_and_size(content, &line_index);
 	}
 	if (curr_line_size == -1 && content[line_index] != '\0')
-		map.lines_size = -1;
+		map->lines_size = -1;
 	return (map);
 }
 
@@ -144,30 +147,27 @@ int	open_map(char *filepath_map)
 	return (fd_map);
 }
 
-t_map	get_map_content(char *filepath_map)
+t_map	*get_map_content(char *filepath_map)
 {
 	int		fd_map;
 	char	*content;
-	t_map	map;
+	t_map	*map;
 
 	content = NULL;
 	fd_map = open_map(filepath_map);
 	if (fd_map == -1 || read_map_content(fd_map, &content) == -1)
-	{
-		map.lines_size = -1;
-		return (map);
-	}
+		return (NULL);
 	map = prepare_map_content(content);
-	if (map.lines_size != -1)
+	if (map && map->lines_size != -1)
 		transform_map_content(content, &map);
 	free(content);
 	return (map);
 }
 
-/*
-int	main(int argc, char **argv)
+
+/*int	main(int argc, char **argv)
 {
-	t_map map;
+	t_map *map;
 
 	if (argc != 2)
 	{
@@ -175,21 +175,24 @@ int	main(int argc, char **argv)
 		return (1);
 	}
 	map = get_map_content(argv[1]);
-	if (map.lines_size == -1)
+	if (!map || map->lines_size == -1)
 	{
 		ft_putstr_fd("Error while parsing map\n", 1);
+		if (map)
+			free(map);
 		return (1);
 	}
 	int i = 1;
-	while (i <= (map.lines_size * map.nbr_total_lines))
+	while (i <= (map->lines_size * map->nbr_total_lines))
 	{
-		printf("%4i", map.lines_content[i - 1]);
-		if (i % map.lines_size == 0)
+		printf("%4i", map->lines_content[i - 1]);
+		if (i % map->lines_size == 0)
 			printf("\n");
 		i++;
 	}
 	printf("\n");
-	free (map.lines_content);
+	free (map->lines_content);
+	free(map);
 	return (0);
 }
 */
