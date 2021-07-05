@@ -6,7 +6,7 @@
 /*   By: anadege <anadege@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/28 17:06:19 by anadege           #+#    #+#             */
-/*   Updated: 2021/07/02 14:29:05 by anadege          ###   ########.fr       */
+/*   Updated: 2021/07/05 15:15:46 by anadege          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,8 @@ void	transform_map_content(char *content, t_map	**map)
 			(*map)->nbr_total_lines);
 	if ((*map)->lines_content == NULL)
 		(*map)->lines_size = -1;
+	(*map)->max_z = seek_max_z(*map);
+	(*map)->min_z = seek_min_z(*map);
 	return ;
 }
 

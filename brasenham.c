@@ -6,31 +6,32 @@
 /*   By: anadege <anadege@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/25 17:48:24 by anadege           #+#    #+#             */
-/*   Updated: 2021/06/28 15:16:39 by anadege          ###   ########.fr       */
+/*   Updated: 2021/07/05 21:17:41 by anadege          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
+#include "fdf.h"
 
-int	brasenham_segment(int x_start, int y_start, int x_end, int y_end)
+int	brasenham_segment(t_param *param, t_point *start_point, t_point *end_point)
 {
 	int	error_margin;
-	int	delta_x;
-	int	delta_y;
+	int	delta_i;
+	int	delta_j;
 
-	error_margin = x_end - x_start;
-	delta_x = error_margin * 2;
-	delta_y = (y_end - y_start) * 2;
-	while (x_start < x_end)
+	error_margin = end_point->i - start_point->i;
+	delta_i = error_margin * 2;
+	delta_j = (end_point->j - start_point->j) * 2;
+	put_pixel_default_color(param, start_point->i, start_point->j);
+	while (start_point->i < end_point->i)
 	{
-		x_start += 1;
-		error_margin -= delta_y;
+		start_point->i += 1;
+		error_margin -= delta_j;
 		if (error_margin <= 0)
 		{
-			y_start += 1;
-			error_margin += delta_x;
+			start_point->j += 1;
+			error_margin += delta_i;
 		}
-		//mlx_pixel_put(mlx, win, x_start, y_start, color);
+		put_pixel_default_color(param, start_point->i, start_point->j);
 	}
 	return (0);
 }
