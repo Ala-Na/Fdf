@@ -6,7 +6,7 @@
 /*   By: anadege <anadege@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 14:29:19 by anadege           #+#    #+#             */
-/*   Updated: 2021/07/05 21:06:31 by anadege          ###   ########.fr       */
+/*   Updated: 2021/07/06 15:18:47 by anadege          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,8 @@ int	brasenham_segment(t_param *param, t_point *start_point, t_point *end_point);
 */
 int	error_in_arguments(int argc);
 int	error_while_parsing(t_map *map);
+
+void	print_point(t_point *point);
 
 int	seek_potential_max_i(t_param *param);
 int	seek_potential_max_j(t_param *param);

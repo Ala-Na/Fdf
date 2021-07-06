@@ -6,7 +6,7 @@
 /*   By: anadege <anadege@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/25 22:36:32 by anadege           #+#    #+#             */
-/*   Updated: 2021/07/05 21:17:34 by anadege          ###   ########.fr       */
+/*   Updated: 2021/07/06 20:52:44 by anadege          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,15 +30,20 @@ void	two_dim_iso_coordinates(t_param *param, t_point *point)
 	// Obtain coordinates by calculus in a 2D environment
 	i = point->x * cos(alpha * radian) + point->y * cos((alpha + 120) * radian) + point->z * cos((alpha - 120) * radian);
 	j = point->x * sin(alpha * radian) + point->y * sin((alpha + 120) * radian) + point->z * sin((alpha - 120) * radian);
+	printf("i is %f, j is %f\n", i, j);
 	// Replace point with center of the image as center
 	i += (double)param->i_start;
 	j += (double)param->j_start;
+	printf("after start i is %f j is %f\n", i, j);
 	// Make it bigger accoriding to pix_per_seg
-	i *= (double)param->pix_per_seg;
-	j *= (double)param->pix_per_seg;
+	i += (point->x + point->y) * (double)param->pix_per_seg;
+	j += (point->x + point->y) * (double)param->pix_per_seg;
+	//printf("after pix per seg i is %f j is %f\n", i, j);
 	// Stock result
 	point->i = (int)i;
 	point->j = (int)j;
+	print_point(point);
+	printf("\n");
 }
 
 void	recup_three_dim_z(t_param *param, t_point *point)
@@ -61,10 +66,10 @@ int	prep_horizontals_lines(t_param *param, t_point *prev_point, t_point *curr_po
 			two_dim_iso_coordinates(param, curr_point);
 			if (prev_point->i != -1 && prev_point->j != -1)
 				brasenham_segment(param, prev_point, curr_point);
-			prev_point = curr_point;
+			*prev_point = *curr_point;
 			curr_point->x += 1;
 		}
-		prev_point = curr_point;
+		*prev_point = *curr_point;
 		curr_point->y += 1;
 	}
 	return (0);
@@ -82,10 +87,10 @@ int	prep_verticals_lines(t_param *param, t_point *prev_point, t_point *curr_poin
 			two_dim_iso_coordinates(param, curr_point);
 			if (prev_point->i != -1 && prev_point->j != -1)
 				brasenham_segment(param, prev_point, curr_point);
-			prev_point = curr_point;
+			*prev_point = *curr_point;
 			curr_point->y += 1;
 		}
-		prev_point = curr_point;
+		*prev_point = *curr_point;
 		curr_point->x += 1;
 	}
 	return (0);

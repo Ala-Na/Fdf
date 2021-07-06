@@ -6,7 +6,7 @@
 /*   By: anadege <anadege@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/05 14:31:40 by anadege           #+#    #+#             */
-/*   Updated: 2021/07/05 17:34:54 by anadege          ###   ########.fr       */
+/*   Updated: 2021/07/06 15:28:55 by anadege          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,9 @@ int	seek_potential_max_i(t_param *param)
 	max_i_min_z = param->map_infos->lines_size * cos (alpha * radian) 
 		+ param->map_infos->nbr_total_lines * cos ((alpha + 120) * radian)
 		+ param->map_infos->min_z * cos ((alpha - 120) * radian);
-	if (max_i_max_z > 0)
+	if (max_i_max_z < 0)
 		max_i_max_z *= -1;
-	if (max_i_min_z > 0)
+	if (max_i_min_z < 0)
 		max_i_min_z *= -1;
 	if (max_i_max_z > max_i_min_z)
 		return ((int)max_i_max_z);
@@ -60,9 +60,9 @@ int	seek_potential_max_j(t_param *param)
 	max_j_min_z = param->map_infos->lines_size * sin (alpha * radian) 
 		+ param->map_infos->nbr_total_lines * sin ((alpha + 120) * radian)
 		+ param->map_infos->min_z * sin ((alpha - 120) * radian);
-	if (max_j_max_z > 0)
+	if (max_j_max_z < 0)
 		max_j_max_z *= -1;
-	if (max_j_min_z > 0)
+	if (max_j_min_z < 0)
 		max_j_min_z *= -1;
 	if (max_j_max_z > max_j_min_z)
 		return ((int)max_j_max_z);
@@ -85,6 +85,7 @@ void	adjust_pixel_per_segment(t_param *param)
 	while (param->pix_per_seg > 4 && ((max_i * param->pix_per_seg + param->i_start) > param->img_length
 				|| (max_j * param->pix_per_seg + param->j_start) > param->img_height))
 		param->pix_per_seg -= 1;
+	printf("Max i : %i Max j : %i\nPix_per_seg : %i\n", max_i, max_j, param->pix_per_seg);
 }
 
 /*

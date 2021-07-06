@@ -6,7 +6,7 @@
 /*   By: anadege <anadege@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/05 20:26:13 by anadege           #+#    #+#             */
-/*   Updated: 2021/07/05 21:11:25 by anadege          ###   ########.fr       */
+/*   Updated: 2021/07/06 20:57:08 by anadege          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,12 @@
 
 int	put_pixel_default_color(t_param *param, int i, int j)
 {
-	char	*pixel;
+	int		index;
 	unsigned int default_color;
 
-	pixel = param->img_addr + (j + param->size_line + i * (param->bits_per_pixel / 8));
+	index = (j * param->size_line) + (i * param->bits_per_pixel / 8);
 	default_color = mlx_get_color_value(param->mlx, param->default_color);
-	*(pixel) = default_color;
+	param->img_addr[index] = default_color;
 }
 
 int	manage_image(t_param *param)
