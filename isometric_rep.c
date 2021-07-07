@@ -6,7 +6,7 @@
 /*   By: anadege <anadege@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/25 22:36:32 by anadege           #+#    #+#             */
-/*   Updated: 2021/07/06 20:52:44 by anadege          ###   ########.fr       */
+/*   Updated: 2021/07/07 17:42:16 by anadege          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,16 +28,16 @@ void	two_dim_iso_coordinates(t_param *param, t_point *point)
 	alpha = param->alpha;
 	radian = PI / 180;
 	// Obtain coordinates by calculus in a 2D environment
-	i = point->x * cos(alpha * radian) + point->y * cos((alpha + 120) * radian) + point->z * cos((alpha - 120) * radian);
-	j = point->x * sin(alpha * radian) + point->y * sin((alpha + 120) * radian) + point->z * sin((alpha - 120) * radian);
+	i = (point->x * cos(alpha * radian) + point->y * cos((alpha + 120) * radian) + point->z * cos((alpha - 120) * radian)) * param->pix_per_seg;
+	j = (point->x * sin(alpha * radian) + point->y * sin((alpha + 120) * radian) + point->z * sin((alpha - 120) * radian)) * param->pix_per_seg;
 	printf("i is %f, j is %f\n", i, j);
 	// Replace point with center of the image as center
 	i += (double)param->i_start;
 	j += (double)param->j_start;
 	printf("after start i is %f j is %f\n", i, j);
 	// Make it bigger accoriding to pix_per_seg
-	i += (point->x + point->y) * (double)param->pix_per_seg;
-	j += (point->x + point->y) * (double)param->pix_per_seg;
+	//i += (point->x + point->y) * (double)param->pix_per_seg;
+	//j += (point->x + point->y) * (double)param->pix_per_seg;
 	//printf("after pix per seg i is %f j is %f\n", i, j);
 	// Stock result
 	point->i = (int)i;

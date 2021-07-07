@@ -6,7 +6,7 @@
 /*   By: anadege <anadege@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/05 14:31:40 by anadege           #+#    #+#             */
-/*   Updated: 2021/07/06 15:28:55 by anadege          ###   ########.fr       */
+/*   Updated: 2021/07/07 17:45:37 by anadege          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,8 @@ void	adjust_pixel_per_segment(t_param *param)
 	while (param->pix_per_seg > 4 && ((max_i * param->pix_per_seg + param->i_start) > param->img_length
 				|| (max_j * param->pix_per_seg + param->j_start) > param->img_height))
 		param->pix_per_seg -= 1;
+	param->pix_per_seg -= 1;
+	param->pix_per_seg = 20;
 	printf("Max i : %i Max j : %i\nPix_per_seg : %i\n", max_i, max_j, param->pix_per_seg);
 }
 
