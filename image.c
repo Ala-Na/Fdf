@@ -6,7 +6,7 @@
 /*   By: anadege <anadege@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/05 20:26:13 by anadege           #+#    #+#             */
-/*   Updated: 2021/07/07 16:50:12 by anadege          ###   ########.fr       */
+/*   Updated: 2021/07/08 15:35:35 by anadege          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,7 @@ int	put_pixel_default_color(t_param *param, int i, int j)
 		*pixel = default_color;
 		return (0);
 	}
-	else 
-	{
-		printf("Value not taken\n");
-		return (1);
-	}
+	return (1);
 }
 
 int	manage_image(t_param *param)

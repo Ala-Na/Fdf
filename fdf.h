@@ -6,7 +6,7 @@
 /*   By: anadege <anadege@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 14:29:19 by anadege           #+#    #+#             */
-/*   Updated: 2021/07/06 15:18:47 by anadege          ###   ########.fr       */
+/*   Updated: 2021/07/08 23:39:07 by anadege          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,16 +29,18 @@
 # define WHITE 0xFFFFFFFF
 
 /*
-** Structure to stock x / y coordinates
+** Structure to stock x / y / z coordinates and convert
+** them as i / j coordinates (3D to 2D).
 */ 
 typedef struct s_point
 {
+	int	position;
 	int	x;
 	int	y;
 	int	z;
-	int	i;
-	int	j;
-}	t_point ;
+	int	*i;
+	int	*j;
+}	t_point;
 
 /*
 ** Structure for stocking map content
@@ -48,8 +50,6 @@ typedef struct s_map
 	int	lines_size;
 	int	nbr_total_lines;
 	int	*lines_content;
-	int	max_z;
-	int	min_z;
 }	t_map;
 
 /*
@@ -57,7 +57,6 @@ typedef struct s_map
 */
 typedef struct s_param
 {
-	int		valid;
 	void	*mlx;
 	void	*window;
 	void	*img;
@@ -75,16 +74,26 @@ typedef struct s_param
 	int		pix_per_seg;
 	int		default_color;
 	t_map	*map_infos;
+	t_point	*points;
 }	t_param;
 
+int	adjust_start(t_param *param, int *values);
+int	seek_maximum_value(t_param *param, int *values);
+int	adjust_pixel_per_segment(t_param *param);
+
+t_point	*recup_coordinates(t_param *param);
 
 void	two_dim_iso_coordinates(t_param *param, t_point *point);
 void	recup_three_dim_z(t_param *param, t_point *point);
 int	prep_horizontals_line(t_param *param, t_point *prev_point, t_point *curr_point);
 int	prep_verticals_line(t_param *param, t_point *prev_point, t_point *curr_point);
-void	init_point(t_point *point);
 int	init_recup_three_dim_coordinates(t_param *param);
 
+
+int	init_point(t_point *point, t_param *param);
+t_point	*recup_three_dim_coordinates(t_param *param);
+
+int	get_delta_and_sign(int start, int end, int *sign);
 int	brasenham_segment(t_param *param, t_point *start_point, t_point *end_point);
 /*
 ** Errors messages functions
@@ -92,13 +101,9 @@ int	brasenham_segment(t_param *param, t_point *start_point, t_point *end_point);
 int	error_in_arguments(int argc);
 int	error_while_parsing(t_map *map);
 
-void	print_point(t_point *point);
+void	print_point(t_point *point, t_param *param);
 
-int	seek_potential_max_i(t_param *param);
-int	seek_potential_max_j(t_param *param);
-void	adjust_pixel_per_segment(t_param *param);
-int	seek_max_z(t_map *map);
-int	seek_min_z(t_map *map);
+int	adjust_pixel_per_segment(t_param *param);
 
 int	put_pixel_default_color(t_param *param, int i, int j);
 int	manage_image(t_param *param);
