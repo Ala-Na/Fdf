@@ -6,7 +6,7 @@
 /*   By: anadege <anadege@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/08 22:54:52 by anadege           #+#    #+#             */
-/*   Updated: 2021/07/08 23:45:37 by anadege          ###   ########.fr       */
+/*   Updated: 2021/07/09 00:11:07 by anadege          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,8 @@ int	seek_maximum_value(t_param *param, int *values)
 
 /*
 ** Function to seek the biggest pixels per segment value which can fit inside
-** a window.
+** a window. Value start at 100 as it's the random value used to convert double
+** to int inside transformation.c.
 */
 int	adjust_pixel_per_segment(t_param *param)
 {
@@ -74,13 +75,16 @@ int	adjust_pixel_per_segment(t_param *param)
 	int	max_i;
 	int max_j;
 
-	pix_per_seg = 1;
+	pix_per_seg = 100;
 	max_i = seek_maximum_value(param, param->points->i) + param->i_start;
 	max_j = seek_maximum_value(param, param->points->j) + param->j_start;
 	if (max_i == max_j && max_i == 0)
 		return (1);
-	while (max_i * (pix_per_seg + 1) < param->img_length
-			&& max_j * (pix_per_seg + 1) < param->img_height)
+	while (max_i * pix_per_seg  < param->img_length
+			&& max_j * pix_per_seg < param->img_height)
 		pix_per_seg++;
+	while (max_i * pix_per_seg  > param->img_length
+			&& max_j * pix_per_seg > param->img_height)
+		pix_per_seg--;
 	return (pix_per_seg);
 }
