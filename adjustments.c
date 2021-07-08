@@ -6,7 +6,7 @@
 /*   By: anadege <anadege@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/08 22:54:52 by anadege           #+#    #+#             */
-/*   Updated: 2021/07/09 00:11:07 by anadege          ###   ########.fr       */
+/*   Updated: 2021/07/09 00:12:37 by anadege          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,8 +83,8 @@ int	adjust_pixel_per_segment(t_param *param)
 	while (max_i * pix_per_seg  < param->img_length
 			&& max_j * pix_per_seg < param->img_height)
 		pix_per_seg++;
-	while (max_i * pix_per_seg  > param->img_length
-			&& max_j * pix_per_seg > param->img_height)
+	while (pix_per_seg > 1 && (max_i * pix_per_seg  > param->img_length
+			|| max_j * pix_per_seg > param->img_height))
 		pix_per_seg--;
 	return (pix_per_seg);
 }
