@@ -12,6 +12,23 @@
 #include "fdf.h"
 
 /*
+** Functions to convert any 3D x/y/z coordinates into 2D coordinates i/j with a
+** plane representation.
+** Coordinates are multipled by 100 (like their isometric counterpart) and
+** stocked inside array of int which are elements of structure t_point.
+*/
+void	two_dim_plane_coordinates(t_point *point, t_param *param)
+{
+	double	i;
+	double	j;
+	
+	i = point->y * -100;
+	j = point->z * -100;
+	point->i[point->position] = (int)i;
+	point->j[point->position] = (int)j;
+}
+
+/*
 ** Functions to convert any 3D x/y/z coordinates into 2D coordinates i/j with an
 ** isometric representation according to an alpha angle along the x axis.
 ** Alpha is set to 30 degree as default but can be modified to have a rotation 
@@ -19,13 +36,13 @@
 ** Coordinates are multipled by 100 in order to conserve their value as int and
 ** stocked inside array of int which are elements of structure t_point.
 */
-void	two_dim_coordinates(t_point *point, t_param *param)
+void	two_dim_iso_coordinates(t_point *point, t_param *param)
 {
 	double	i;
 	double	j;
 	double	alpha;
 	double	radian;
-
+	
 	alpha = param->alpha;
 	radian = PI / 180;
 	i = (point->x * cos((alpha + 120) * radian)
@@ -58,7 +75,10 @@ void	fill_array_of_points(t_point *point, t_param *param)
 			&& point->position < max_position)
 		{
 			point->z = param->map_infos->lines_content[point->position];
-			two_dim_coordinates(point, param);
+			if (param->perspective == 0)
+				two_dim_iso_coordinates(point, param);
+			else
+				two_dim_plane_coordinates(point,param);
 			point->y += 1;
 			point->position += 1;
 		}

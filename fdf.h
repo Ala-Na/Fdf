@@ -6,7 +6,7 @@
 /*   By: anadege <anadege@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 14:29:19 by anadege           #+#    #+#             */
-/*   Updated: 2021/07/09 17:36:59 by anadege          ###   ########.fr       */
+/*   Updated: 2021/07/10 00:15:41 by anadege          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,11 @@
 # include <stdlib.h>
 # include <mlx.h>
 
-# define WIN_LENGTH 1000
-# define WIN_HEIGHT 800
+# define WIN_LENGTH 1900
+# define WIN_HEIGHT 1000
 # define ALPHA 30
 # define PI 3.14159265359
-# define WHITE 0xFF
+# define BLUE 0xFF
 
 /*
 ** Structure used to draw segments. Variables are 
@@ -75,6 +75,7 @@ typedef struct s_map
 */
 typedef struct s_param
 {
+	int		perspective;
 	void	*mlx;
 	void	*window;
 	void	*img;
@@ -91,10 +92,15 @@ typedef struct s_param
 	int		alpha;
 	int		pix_per_seg;
 	int		default_color;
+	int		depth;
 	t_map	*map_infos;
 	t_point	*points;
 }	t_param;
 
+void	modify_depth(t_param *param, int modif);
+void	erase_modifications(t_param *param);
+void	modify_perspective(t_param *param);
+void	modify_position(t_param *param, int modif);
 
 /*
 ** Functions to adjust display inside windows limits at launch.
@@ -107,7 +113,8 @@ int	adjust_pixel_per_segment(t_param *param);
 /*
 ** Functions to transform 3D coordinates in 2D coordinates.
 */
-void	two_dim_coordinates(t_point *point, t_param *param);
+void	two_dim_iso_coordinates(t_point *point, t_param *param);
+void	two_dim_plane_coordinates(t_point *point, t_param *param);
 void	fill_array_of_points(t_point *point, t_param *param);
 int	init_point(t_point *point, t_param *param);
 t_point	*recup_coordinates(t_param *param);
@@ -135,6 +142,7 @@ void	print_point(t_point *point, t_param *param);
 ** Draw pixel and image managments functions.
 */
 void	put_pixel_default_color(t_param *param, int i, int j);
+void	re_manage_image(t_param *param);
 void	manage_image(t_param *param);
 /*
 ** Parsing functions
@@ -158,6 +166,7 @@ void	clean_exit(t_param *param);
 ** Functions for evenments
 */
 int	key_hook(int keycode, t_param *param);
+int	mouse_hook(int mousecode, int x, int y, t_param *param);
 
 /*
 ** Main and initialization functions

@@ -6,7 +6,7 @@
 /*   By: elanna <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/23 20:14:02 by elanna            #+#    #+#             */
-/*   Updated: 2021/07/09 17:35:47 by anadege          ###   ########.fr       */
+/*   Updated: 2021/07/10 00:15:54 by anadege          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ t_param	*init_param(t_map *map)
 	param = malloc(sizeof(*param));
 	if (!param)
 		return (NULL);
+	param->perspective = 0;
 	param->mlx = NULL;
 	param->window = NULL;
 	param->img = NULL;
@@ -34,7 +35,8 @@ t_param	*init_param(t_map *map)
 	param->img_length = param->win_length - 20;
 	param->img_height = param->win_height - 20;
 	param->alpha = ALPHA;
-	param->default_color = WHITE;
+	param->default_color = BLUE;
+	param->depth = 0;
 	param->map_infos = map;
 	param->points = recup_coordinates(param);
 	if (param->points == NULL)

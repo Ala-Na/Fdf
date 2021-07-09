@@ -6,7 +6,7 @@
 /*   By: anadege <anadege@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/09 11:22:28 by anadege           #+#    #+#             */
-/*   Updated: 2021/07/09 15:16:19 by anadege          ###   ########.fr       */
+/*   Updated: 2021/07/09 22:48:50 by anadege          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	brasenham_segment(t_param *param, int start, int end)
 	bra.delta_i = get_delta_and_sign(bra.i_start, bra.i_end, &bra.sign_i);
 	bra.delta_j = get_delta_and_sign(bra.j_start, bra.j_end, &bra.sign_j);
 	bra.error = bra.delta_i - bra.delta_j;
-	while (bra.i_start != bra.i_end && bra.j_start != bra.j_end)
+	while (bra.i_start != bra.i_end || bra.j_start != bra.j_end)
 	{
 		put_pixel_default_color(param, bra.i_start, bra.j_start);
 		bra.mult_error = 2 * bra.error;
