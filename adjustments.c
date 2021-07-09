@@ -6,7 +6,7 @@
 /*   By: anadege <anadege@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/08 22:54:52 by anadege           #+#    #+#             */
-/*   Updated: 2021/07/09 12:04:45 by anadege          ###   ########.fr       */
+/*   Updated: 2021/07/09 17:25:26 by anadege          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,16 @@
 */
 void	apply_adjustments(t_param *param)
 {
-	int	max_position;
-	int	ind;
+	int		max_position;
+	int		ind;
 	double	new_i;
 	double	new_j;
 
-	max_position = param->map_infos->nbr_total_lines * param->map_infos->lines_size;
+	param->i_start = adjust_start(param, param->points->i);
+	param->j_start = adjust_start(param, param->points->j);
+	param->pix_per_seg = adjust_pixel_per_segment(param);
+	max_position = param->map_infos->nbr_total_lines
+		* param->map_infos->lines_size;
 	ind = 0;
 	while (ind < max_position)
 	{
@@ -46,13 +50,14 @@ void	apply_adjustments(t_param *param)
 */
 int	adjust_start(t_param *param, int *values)
 {
-	int max_position;
+	int	max_position;
 	int	value_min;
 	int	position;
 
 	if (!values)
 		return (0);
-	max_position = param->map_infos->nbr_total_lines * param->map_infos->lines_size;
+	max_position = param->map_infos->nbr_total_lines
+		* param->map_infos->lines_size;
 	value_min = 0;
 	position = 0;
 	while (position < max_position)
@@ -72,13 +77,14 @@ n** param->points->i or param->points->j) without the starting point added.
 */
 int	seek_maximum_value(t_param *param, int *values)
 {
-	int max_position;
+	int	max_position;
 	int	value_max;
-	int position;
+	int	position;
 
 	if (!values)
 		return (0);
-	max_position = param->map_infos->nbr_total_lines * param->map_infos->lines_size;
+	max_position = param->map_infos->nbr_total_lines
+		* param->map_infos->lines_size;
 	value_max = 0;
 	position = 0;
 	while (position < max_position)
@@ -92,12 +98,12 @@ int	seek_maximum_value(t_param *param, int *values)
 
 /*
 ** Function to seek the biggest pixels per segment value which can fit inside
-** a window. Max values are divided by 100 as it's the random value used to convert double
-** to int inside transformation.c.
+** a window. Max values are divided by 100 as it's the random value used
+** to convert double in int inside transformation.c.
 */
 int	adjust_pixel_per_segment(t_param *param)
 {
-	int	pix_per_seg;
+	int		pix_per_seg;
 	double	max_i;
 	double	max_j;
 
@@ -108,10 +114,10 @@ int	adjust_pixel_per_segment(t_param *param)
 	max_j /= 100;
 	if (max_i == max_j && max_i == 0)
 		return (1);
-	while (max_i * pix_per_seg  < param->img_length
-			&& max_j * pix_per_seg < param->img_height)
+	while (max_i * pix_per_seg < param->img_length
+		&& max_j * pix_per_seg < param->img_height)
 		pix_per_seg++;
-	while (pix_per_seg > 1 && (max_i * pix_per_seg  > param->img_length
+	while (pix_per_seg > 1 && (max_i * pix_per_seg > param->img_length
 			|| max_j * pix_per_seg > param->img_height))
 		pix_per_seg--;
 	return (pix_per_seg);

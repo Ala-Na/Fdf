@@ -6,47 +6,22 @@
 /*   By: elanna <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/23 20:14:02 by elanna            #+#    #+#             */
-/*   Updated: 2021/07/09 15:18:35 by anadege          ###   ########.fr       */
+/*   Updated: 2021/07/09 17:35:47 by anadege          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-void	exit_fdf(t_param *param)
+/*
+** Function to initiate value of the main structure t_param.
+*/
+t_param	*init_param(t_map *map)
 {
-	if (param->mlx != NULL && param->window != NULL)
-		mlx_destroy_window(param->mlx, param->window);
-	if (param->mlx != NULL && param->img != NULL)
-		mlx_destroy_image(param->mlx, param->img);
-	if (param->mlx != NULL)
-		mlx_destroy_display(param->mlx);
-	if (param != NULL)
-	{
-		if (param->mlx != NULL)
-			free(param->mlx);
-		if (param->map_infos != NULL)
-		{
-			if (param->map_infos->lines_content != NULL)
-				free(param->map_infos->lines_content);
-			free(param->map_infos);
-		}
-		free(param);
-	}
-}
+	t_param	*param;
 
-int	key_hook(int keycode, t_param *param)
-{
-	if (keycode == 65307)
-	{
-		exit_fdf(param);
-		exit(0);
-		return (1);
-	}
-	return (0);
-}
-
-void	init_param(t_param *param, t_map *map)
-{
+	param = malloc(sizeof(*param));
+	if (!param)
+		return (NULL);
 	param->mlx = NULL;
 	param->window = NULL;
 	param->img = NULL;
@@ -62,60 +37,39 @@ void	init_param(t_param *param, t_map *map)
 	param->default_color = WHITE;
 	param->map_infos = map;
 	param->points = recup_coordinates(param);
-	param->i_start = adjust_start(param, param->points->i);
-	param->j_start = adjust_start(param, param->points->j);
-	param->pix_per_seg = adjust_pixel_per_segment(param);
+	if (param->points == NULL)
+		return (NULL);
 	apply_adjustments(param);
-}
-
-t_param	*init_fdf(t_map *map, char	*filepath)
-{
-	t_param	*param;
-	int		image_done;
-
-	param = malloc(sizeof(*param));
-	if (!param)
-		return (NULL);
-	init_param(param, map);
-	param->mlx = mlx_init();
-	if (param->mlx == NULL)
-	{
-		ft_putstr_fd("Initiation error\n", 1);
-		exit_fdf(param);
-		return (NULL);
-	}
-	ft_putstr_fd("Initiation successful\n", 1);
-	param->window = mlx_new_window(param->mlx, WIN_LENGTH, WIN_HEIGHT, filepath);
-	param->img = mlx_new_image(param->mlx, param->img_length, param->img_height);
-	if (param->window != NULL && param->img != NULL)
-	{
-		ft_putstr_fd("Window and image successfuly generated\n", 1);
-		if (param->points == NULL)
-		{
-			ft_putstr_fd("Error while converting points\n", 1);
-			return (NULL);
-		}
-		image_done = manage_image(param);
-		if (image_done == 0)
-			mlx_put_image_to_window(param->mlx, param->window, param->img, 10, 10);
-		else
-		{
-			ft_putstr_fd("Error while drawing image\n", 1);
-			exit_fdf(param);
-			return (NULL);
-		}
-		mlx_key_hook(param->window, key_hook, param);
-		mlx_loop(param->mlx);
-	}
-	else
-	{
-		ft_putstr_fd("Window or image error\n", 1);
-		exit_fdf(param);
-		return (NULL);
-	}
 	return (param);
 }
 
+t_param	*fdf(t_map *map, char *filepath)
+{
+	t_param	*param;
+
+	param = init_param(map);
+	if (param == NULL)
+		return (init_error("STRUCTURE", param));
+	param->mlx = mlx_init();
+	if (param->mlx == NULL)
+		return (init_error("MINILIBX", param));
+	param->window = mlx_new_window(param->mlx, WIN_LENGTH,
+			WIN_HEIGHT, filepath);
+	if (param->window == NULL)
+		return (init_error("WINDOW", param));
+	param->img = mlx_new_image(param->mlx, param->img_length,
+			param->img_height);
+	if (param->img == NULL)
+		return (init_error("IMAGE", param));
+	manage_image(param);
+	mlx_key_hook(param->window, key_hook, param);
+	mlx_loop(param->mlx);
+	return (param);
+}
+
+/*
+** Main. Check number of arguments before starting core of program.
+*/
 int	main(int argc, char **argv)
 {
 	t_param	*param;
@@ -126,25 +80,9 @@ int	main(int argc, char **argv)
 	map = get_map_content(argv[1]);
 	if (!map || map->lines_size == -1)
 		return (error_while_parsing(map));
-
-	/*
-	** Print map for test purpose only
-	*/
-	int i = 1;
-	while (i <= (map->lines_size * map->nbr_total_lines))
-	{
-		printf("%4i", map->lines_content[i - 1]);
-		if (i % map->lines_size == 0)
-			printf("\n");
-		i++;
-	}
-	printf("\n");
-	/*
-	** End test purpose
-	*/
-
-	param = init_fdf(map, argv[1]);
+	param = fdf(map, argv[1]);
 	if (param == NULL)
 		return (1);
+	clean_exit(param);
 	return (0);
 }

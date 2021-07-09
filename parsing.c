@@ -6,7 +6,7 @@
 /*   By: anadege <anadege@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/28 17:06:19 by anadege           #+#    #+#             */
-/*   Updated: 2021/07/08 16:46:14 by anadege          ###   ########.fr       */
+/*   Updated: 2021/07/09 16:24:17 by anadege          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ int	verify_line_format_and_size(char *line, int *line_index)
 	line_size = 0;
 	while (line[*line_index] != '\n' && line[*line_index] != '\0')
 	{
+		while(line[*line_index] == ' ')
+			(*line_index)++;
 		if (!ft_isdigit(line[*line_index]) && line[*line_index] != '-')
 			return (-1);
 		if (line[*line_index] == '-')
@@ -89,7 +91,9 @@ t_map	*prepare_map_content(char *content)
 	while (curr_line_size != -1 && content[line_index] != '\0')
 	{
 		if (curr_line_size != map->lines_size)
+		{
 			map->lines_size = -1;
+		}
 		map->nbr_total_lines += 1;
 		curr_line_size = verify_line_format_and_size(content, &line_index);
 	}
