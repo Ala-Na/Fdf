@@ -27,8 +27,8 @@ void	two_dim_coordinates(t_point *point, t_param *param)
 
 	alpha = param->alpha;
 	radian = PI / 180;
-	i = (point->x * cos(alpha * radian) + point->y * cos((alpha + 120) * radian) + point->z * cos((alpha - 120) * radian)) * 100;
-	j = (point->x * sin(alpha * radian) + point->y * sin((alpha + 120) * radian) + point->z * sin((alpha - 120) * radian)) * 100;
+	i = (point->x * cos((alpha + 120) * radian) + point->y * cos((alpha) * radian) + point->z * cos((alpha - 120) * radian)) * 100;
+	j = (point->x * sin((alpha + 120) * radian) + point->y * sin((alpha) * radian) + point->z * sin((alpha - 120) * radian)) * 100;
 	point->i[point->position] = (int)i;
 	point->j[point->position] = (int)j;
 }
@@ -43,10 +43,10 @@ void	fill_array_of_points(t_point *point, t_param *param)
 
 	max_position = param->map_infos->lines_size * param->map_infos->nbr_total_lines;
 	point->x = 0;
-	while (point->x < param->map_infos->lines_size && point->position < max_position)
+	while (point->x < param->map_infos->nbr_total_lines && point->position < max_position)
 	{
 		point->y = 0;
-		while (point->y < param->map_infos->nbr_total_lines && point->position < max_position)
+		while (point->y < param->map_infos->lines_size && point->position < max_position)
 		{
 			point->z = param->map_infos->lines_content[point->position];
 			two_dim_coordinates(point, param);

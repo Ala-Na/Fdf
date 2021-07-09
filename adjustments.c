@@ -6,11 +6,37 @@
 /*   By: anadege <anadege@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/08 22:54:52 by anadege           #+#    #+#             */
-/*   Updated: 2021/07/09 00:12:37 by anadege          ###   ########.fr       */
+/*   Updated: 2021/07/09 12:04:45 by anadege          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
+
+/*
+** Apply adjustements to points
+*/
+void	apply_adjustments(t_param *param)
+{
+	int	max_position;
+	int	ind;
+	double	new_i;
+	double	new_j;
+
+	max_position = param->map_infos->nbr_total_lines * param->map_infos->lines_size;
+	ind = 0;
+	while (ind < max_position)
+	{
+		new_i = param->points->i[ind];
+		new_j = param->points->j[ind];
+		new_i += param->i_start;
+		new_j += param->j_start;
+		new_i = (new_i / 100) * param->pix_per_seg;
+		new_j = (new_j / 100) * param->pix_per_seg;
+		param->points->i[ind] = (int)new_i;
+		param->points->j[ind] = (int)new_j;
+		ind += 1;
+	}
+}
 
 /*
 ** Function to seek the minimum value of i or j (depending if values is 
@@ -66,18 +92,20 @@ int	seek_maximum_value(t_param *param, int *values)
 
 /*
 ** Function to seek the biggest pixels per segment value which can fit inside
-** a window. Value start at 100 as it's the random value used to convert double
+** a window. Max values are divided by 100 as it's the random value used to convert double
 ** to int inside transformation.c.
 */
 int	adjust_pixel_per_segment(t_param *param)
 {
 	int	pix_per_seg;
-	int	max_i;
-	int max_j;
+	double	max_i;
+	double	max_j;
 
-	pix_per_seg = 100;
+	pix_per_seg = 1;
 	max_i = seek_maximum_value(param, param->points->i) + param->i_start;
 	max_j = seek_maximum_value(param, param->points->j) + param->j_start;
+	max_i /= 100;
+	max_j /= 100;
 	if (max_i == max_j && max_i == 0)
 		return (1);
 	while (max_i * pix_per_seg  < param->img_length

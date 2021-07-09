@@ -6,7 +6,7 @@
 /*   By: elanna <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/23 20:14:02 by elanna            #+#    #+#             */
-/*   Updated: 2021/07/08 23:37:21 by anadege          ###   ########.fr       */
+/*   Updated: 2021/07/09 15:18:35 by anadege          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,10 +62,10 @@ void	init_param(t_param *param, t_map *map)
 	param->default_color = WHITE;
 	param->map_infos = map;
 	param->points = recup_coordinates(param);
-	param->pix_per_seg = 1;
 	param->i_start = adjust_start(param, param->points->i);
 	param->j_start = adjust_start(param, param->points->j);
 	param->pix_per_seg = adjust_pixel_per_segment(param);
+	apply_adjustments(param);
 }
 
 t_param	*init_fdf(t_map *map, char	*filepath)
@@ -95,15 +95,15 @@ t_param	*init_fdf(t_map *map, char	*filepath)
 			ft_putstr_fd("Error while converting points\n", 1);
 			return (NULL);
 		}
-		/*image_done = manage_image(param);
+		image_done = manage_image(param);
 		if (image_done == 0)
-			mlx_put_image_to_window(param->mlx, param->window, param->img, 20, 20);
+			mlx_put_image_to_window(param->mlx, param->window, param->img, 10, 10);
 		else
 		{
 			ft_putstr_fd("Error while drawing image\n", 1);
 			exit_fdf(param);
 			return (NULL);
-		}*/
+		}
 		mlx_key_hook(param->window, key_hook, param);
 		mlx_loop(param->mlx);
 	}

@@ -6,7 +6,7 @@
 /*   By: anadege <anadege@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 14:29:19 by anadege           #+#    #+#             */
-/*   Updated: 2021/07/08 23:39:07 by anadege          ###   ########.fr       */
+/*   Updated: 2021/07/09 14:08:02 by anadege          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,20 @@
 # define ALPHA 30
 # define PI 3.14159265359
 # define WHITE 0xFFFFFFFF
+
+typedef struct s_brasenham
+{
+	int	i_start;
+	int	i_end;
+	int	j_start;
+	int	j_end;
+	int	delta_i;
+	int	delta_j;
+	int	sign_i;
+	int	sign_j;
+	int	error;
+	int	mult_error;
+}	t_brasenham;
 
 /*
 ** Structure to stock x / y / z coordinates and convert
@@ -77,6 +91,7 @@ typedef struct s_param
 	t_point	*points;
 }	t_param;
 
+void	apply_adjustments(t_param *param);
 int	adjust_start(t_param *param, int *values);
 int	seek_maximum_value(t_param *param, int *values);
 int	adjust_pixel_per_segment(t_param *param);
@@ -93,8 +108,11 @@ int	init_recup_three_dim_coordinates(t_param *param);
 int	init_point(t_point *point, t_param *param);
 t_point	*recup_three_dim_coordinates(t_param *param);
 
-int	get_delta_and_sign(int start, int end, int *sign);
-int	brasenham_segment(t_param *param, t_point *start_point, t_point *end_point);
+
+int get_delta_and_sign(int start_value, int end_value, int *sign);
+void	brasenham_segment(t_param *param, int start, int end);
+void	draw_grid(t_param *param);
+
 /*
 ** Errors messages functions
 */
@@ -105,7 +123,7 @@ void	print_point(t_point *point, t_param *param);
 
 int	adjust_pixel_per_segment(t_param *param);
 
-int	put_pixel_default_color(t_param *param, int i, int j);
+void	put_pixel_default_color(t_param *param, int i, int j);
 int	manage_image(t_param *param);
 /*
 ** Parsing functions
