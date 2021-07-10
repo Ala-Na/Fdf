@@ -6,7 +6,7 @@
 #    By: anadege <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/06/22 15:37:49 by anadege           #+#    #+#              #
-#    Updated: 2021/07/10 16:08:14 by anadege          ###   ########.fr        #
+#    Updated: 2021/07/10 16:12:23 by anadege          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,7 +41,7 @@ LIBS	= ./minilibx-linux/libmlx.a ./minilibx-linux/libmlx_Linux.a -lXext -lX11 -l
 
 
 all:		${NAME}
-	@echo "\n\nWelcome to fdf project.\n./fdf must receive a compatible map as argument (only digits and constant number of elements per line).\nA window with the 2D representation of 3D coordinates will be displayed.\n\nYou can use keyboards for more fun !\nUP - DOWN - RIGHT - LEFT : deplace the object inside the window.\nSPACE : Return display to original state.\nC : Change vue from isometric to plane\n\nEnjoy !\n"
+	@echo "\n\nWelcome to fdf project.\n./fdf must receive a compatible map as argument (only digits and constant number of elements per line).\nA window with the 2D representation of 3D coordinates will be displayed.\n\nYou can use keyboards for more fun !\n\n\tUP - DOWN - RIGHT - LEFT : deplace the object inside the window.\n\tSPACE : Return display to original state.\n\tC : Change vue from isometric to plane.\n\tESC : Close the window and exit the program.\n\nEnjoy !\n"
 
 
 ${NAME}:	${OBJS}
