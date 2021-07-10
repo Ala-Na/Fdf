@@ -1,1 +1,0 @@
-gcc -g modifications.c image.c representation.c adjustments.c errors.c brasenham.c main.c parsing.c transformation.c exit.c hooks.c libft.a ./minilibx-linux/libmlx.a ./minilibx-linux/libmlx_Linux.a -I ./minilibx-linux/ -lXext -lX11 -lm

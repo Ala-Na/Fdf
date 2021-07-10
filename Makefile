@@ -3,22 +3,56 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: anadege <anadege@student.42.fr>            +#+  +:+       +#+         #
+#    By: anadege <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2021/06/28 15:16:48 by anadege           #+#    #+#              #
-#    Updated: 2021/06/28 15:19:30 by anadege          ###   ########.fr        #
+#    Created: 2021/06/22 15:37:49 by anadege           #+#    #+#              #
+#    Updated: 2021/07/10 16:08:14 by anadege          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME	= Fdf
+SRCS	= ./srcs/adjustments.c \
+		  ./srcs/errors.c \
+		  ./srcs/exit.c \
+		  ./srcs/hooks.c \
+		  ./srcs/image.c \
+		  ./srcs/main.c \
+		  ./srcs/modifications.c \
+		  ./srcs/parsing.c \
+		  ./srcs/read_map.c \
+		  ./srcs/representation.c \
+		  ./srcs/transformation.c \
+		  ./srcs/utils_1.c \
+		  ./srcs/utils_2.c
 
-INC		=
+HEADERS_FILE = includes
 
-SRCS	= ./main.c ./brasenham.c
+NAME = fdf
 
-OBJS	= $(subst .c,.o,$(SRCS)))
+CC	= cc
 
-FLAGS	= -Wall -Wextra -Werror
+CFLAGS	= -Wall -Wextra -Werror
 
-LIBX	= ./minilibx-linux/libmlx.a ./minilibx-linux/libmlx_Linux.a -I ./minilibx-linux/ -lXext -lX11 -lm -lz
+OBJS	= ${SRCS:.c=.o}
 
+LIBS	= ./minilibx-linux/libmlx.a ./minilibx-linux/libmlx_Linux.a -lXext -lX11 -lm
+
+%.o: %.c
+		${CC} -g ${CFLAGS} -I ${HEADERS_FILE} -o $@ -c $<
+
+
+all:		${NAME}
+	@echo "\n\nWelcome to fdf project.\n./fdf must receive a compatible map as argument (only digits and constant number of elements per line).\nA window with the 2D representation of 3D coordinates will be displayed.\n\nYou can use keyboards for more fun !\nUP - DOWN - RIGHT - LEFT : deplace the object inside the window.\nSPACE : Return display to original state.\nC : Change vue from isometric to plane\n\nEnjoy !\n"
+
+
+${NAME}:	${OBJS}
+		${CC} -o ${NAME} ${OBJS} ${LIBS}
+
+clean:
+		@rm -f ${OBJS}
+
+fclean: 	clean
+		@rm -f ${NAME}
+
+re:		fclean all
+
+.PHONY: all clean re
